@@ -1,53 +1,13 @@
-# Atlas Bar
-
-A personal fork of [Vorssaint](https://github.com/vorssaint/vorssaint-utils) with
-[Memory Atlas](https://github.com/aktoriukas/memory-atlas) built into the same native
-macOS menu bar app. This is an independent, unofficial build.
-
-## Memory Atlas
-
-Open **Settings → Features**, find **Memory Atlas**, and install the feature.
-Then click **Memory Atlas** in the menu panel footer, or its installed Features row.
-Its dashboard, memory browser, graph, processing settings, history and exports run
-inside Atlas Bar. It does not start the standalone Memory Atlas app.
-
-The existing claude-mem store and Atlas backups/links are reused without migration.
-Closing the dashboard stops its periodic refresh; opening it again reuses the window.
-Atlas Bar refuses a normal quit while a memory operation is in progress.
-Use Atlas Bar’s General settings for the combined app’s login startup.
-
-## Build and use
-
-```sh
-./build.sh
-open "build/stage/Atlas Bar.app"
-```
-
-For everyday use, copy `build/stage/Atlas Bar.app` to `~/Applications` before enabling
-login startup. Quit standalone Memory Atlas and official Vorssaint, and disable their
-login entries in macOS Login Items, to use a single running menu bar app. Keep the
-original apps installed for rollback. This fork uses its own preferences and permissions.
-
-Local builds are ad-hoc signed unless a local signing identity is configured. They are
-not Apple notarized. Rebuilds can require granting macOS permissions again.
-Upstream automatic updates are disabled. Install updates by rebuilding this fork.
-Privileged fan control is unavailable until this fork has its own signed helper.
-Memory editing retains Atlas’s compatibility check for claude-mem 13.29.0; newer
-workers can be browsed where schema-compatible, but unsupported edits are refused.
-
-```sh
-./build/AtlasBar --selftest
-./build.sh --test-suite=features --test-suite=settings --test-suite=preferences --test-suite=updates --test-suite=command-bar
-./Tools/check-memory-atlas.sh
-python3 -B Vendor/MemoryAtlas/scripts/check.py
-```
-
-The combined application is GPL-3.0-or-later. Memory Atlas retains its MIT license;
-its compatibility fixture retains Apache-2.0 notices. See [vendoring details](Vendor/MemoryAtlas/README.md).
-The original project documentation follows for reference; its release downloads and
-notarization claims apply to official Vorssaint, not Atlas Bar.
-
----
+> Personal development fork: adds **Memories** to Vorssaint’s existing Settings sidebar.
+> The original design, menu bar and existing tools are retained. Enable **Memories** in
+> **Settings → Features**, then select it in the sidebar to browse, edit, graph and export
+> your existing claude-mem data. No standalone Memory Atlas app is needed.
+>
+> Build with `./build.sh --dev`; the app is `build/stage.noindex/Vorssaint (Developer).app`.
+> This uses the upstream local-development variant, with separate preferences and
+> permissions and no automatic release updates. It is not an official or notarized release.
+> Memory edits retain the claude-mem 13.29.0 compatibility guard; existing memories and
+> backups remain in their original locations. See [integration details](Vendor/MemoryAtlas/README.md).
 
 <p align="center">
   <picture>

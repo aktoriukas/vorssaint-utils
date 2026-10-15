@@ -124,7 +124,14 @@ enum AdminShell {
 /// toggle without asking for the administrator password every time.
 /// The password is asked once, when installing (or removing) the rule.
 enum Sudoers {
-    static let rulePath = "/etc/sudoers.d/atlas-bar-clamshell"
+    static let rulePath = "/etc/sudoers.d/vorssaint-clamshell"
+    // Rule files written under earlier names; removed whenever the rule is
+    // (re)installed or removed, so the closed-lid permission migrates without an
+    // extra password prompt.
+    private static let legacyRulePaths = [
+        "/etc/sudoers.d/vorssaint-utils-clamshell",
+        "/etc/sudoers.d/vorss-clamshell",
+    ]
 
     /// Serializes native writes and read/reapply probes. Authorization runs
     /// separately with probes suspended, so a probe cannot resurrect a stale
@@ -152,7 +159,7 @@ enum Sudoers {
     /// Uninstall offers the removal prompt from this instead of `isConfigured`,
     /// so a rule that stopped working still gets cleaned up.
     static var ruleFilesPresent: Bool {
-        FileManager.default.fileExists(atPath: rulePath)
+        ([rulePath] + legacyRulePaths).contains { FileManager.default.fileExists(atPath: $0) }
     }
 
     static func install(completion: @escaping (Bool) -> Void) {
@@ -160,15 +167,19 @@ enum Sudoers {
         // SSO-enrolled Macs (name@company.com, #915) and the old validation
         // rejected it before the password prompt could even appear.
         let rule = SudoersSupport.clamshellRule(uid: getuid())
-        // The fork only owns its own rule; leave the official app’s rule intact.
-        let command = "mkdir -p /etc/sudoers.d && chmod 0755 /etc/sudoers.d && echo '\(rule)' > \(rulePath) && chmod 0440 \(rulePath) && /usr/sbin/visudo -c -f \(rulePath) || { rm -f \(rulePath); exit 1; }"
+        // Clear any earlier-named rule first, then write and validate the new one
+        // (a failed check rolls back). Same password prompt either way.
+        let legacy = legacyRulePaths.joined(separator: " ")
+        let command = "mkdir -p /etc/sudoers.d && chmod 0755 /etc/sudoers.d && rm -f \(legacy) && echo '\(rule)' > \(rulePath) && chmod 0440 \(rulePath) && /usr/sbin/visudo -c -f \(rulePath) || { rm -f \(rulePath); exit 1; }"
         AdminShell.run(command, prompt: L10n.shared.s.adminPromptSudoersInstall) { ok in
             completion(ok && isConfigured())
         }
     }
 
     static func remove(completion: @escaping (Bool) -> Void) {
-        AdminShell.run("rm -f \(rulePath)",
+        // Also removes the rules left behind by earlier app names.
+        let all = ([rulePath] + legacyRulePaths).joined(separator: " ")
+        AdminShell.run("rm -f \(all)",
                        prompt: L10n.shared.s.adminPromptSudoersRemove) { ok in
             completion(ok)
         }

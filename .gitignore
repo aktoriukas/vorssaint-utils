@@ -23,7 +23,3 @@ AGENTS.md
 *.xcodeproj
 xcuserdata/
 .swiftpm/
-
-# Python bridge caches
-__pycache__/
-*.pyc

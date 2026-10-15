@@ -384,6 +384,13 @@ enum FeatureCatalogTests {
         }
         MusicLaunchBlockerContract.run(suite)
 
+        suite.expect(AppFeature.memoryAtlas.settingsDestination == FeatureSettingsDestination(.memoryAtlas)
+                     && AppFeature.memoryAtlas.hasNavigableSettingsDestination,
+                     "memory browsing uses a normal host Settings page")
+        suite.expect(FeatureVisibilitySupport.isPageVisible(.memoryAtlas, isAvailable: { $0 == .memoryAtlas })
+                     && !FeatureVisibilitySupport.isPageVisible(.memoryAtlas, isAvailable: { _ in false }),
+                     "the memory page follows feature availability")
+
         // MARK: Features hub catalog
 
         suite.expect(AppFeature.allCases.count == 78, "feature catalog has 78 features")
@@ -2075,8 +2082,7 @@ enum FeatureCatalogTests {
                 == FeatureSettingsDestination(.features),
                "features without dedicated pages use explicit nearest Settings destinations")
         suite.expect(!AppFeature.diskImageInstaller.hasNavigableSettingsDestination
-                && !AppFeature.memoryAtlas.hasNavigableSettingsDestination
-                && AppFeature.allCases.filter { $0 != .diskImageInstaller && $0 != .memoryAtlas }
+                && AppFeature.allCases.filter { $0 != .diskImageInstaller }
                     .allSatisfy(\.hasNavigableSettingsDestination),
                "a feature without a separate configuration surface does not show a dead-end link")
         suite.expect(AppFeature.monitorCPU.settingsDestination == FeatureSettingsDestination(.monitor)

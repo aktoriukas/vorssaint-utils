@@ -4,13 +4,12 @@
 import Foundation
 
 enum FanControlIdentifiers {
-    // Privileged fan control stays unavailable until this fork has its own signing team.
-    static let teamID = "ATLAS_BAR_UNSIGNED"
+    static let teamID = "3D485NHW29"
 
     #if VORSSAINT_DEVELOPMENT
-    static let appBundleID = "io.github.aktoriukas.atlas-bar.dev"
+    static let appBundleID = "com.vorssaint.utils.dev"
     #else
-    static let appBundleID = "io.github.aktoriukas.atlas-bar"
+    static let appBundleID = "com.vorssaint.utils"
     #endif
 
     static let helperID = "\(appBundleID).fan-control"

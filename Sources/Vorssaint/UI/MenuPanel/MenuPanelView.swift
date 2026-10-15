@@ -457,12 +457,6 @@ struct MenuPanelView: View {
 
     private var footer: some View {
         HStack(spacing: 8) {
-            if features.isAvailable(.memoryAtlas) {
-                footerButton("Memory Atlas", systemImage: AppFeature.memoryAtlas.symbolName) {
-                    appDelegate()?.closePopover()
-                    MemoryAtlasIntegration.shared.open()
-                }
-            }
             footerButton(l10n.s.panelSettings,
                          systemImage: "gearshape",
                          horizontalPadding: 7) {

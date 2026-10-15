@@ -50,9 +50,7 @@ enum DockClickSupport {
     /// Both local and published builds may be running during development.
     /// Neither is ever a valid target for the other's global Dock click tap.
     static func isOwnBundleIdentifier(_ bundleIdentifier: String?) -> Bool {
-        bundleIdentifier == "io.github.aktoriukas.atlas-bar"
-            || bundleIdentifier == "io.github.aktoriukas.atlas-bar.dev"
-            || bundleIdentifier == "com.vorssaint.utils"
+        bundleIdentifier == "com.vorssaint.utils"
             || bundleIdentifier == "com.vorssaint.utils.dev"
     }
 

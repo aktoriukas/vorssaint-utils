@@ -12,7 +12,7 @@ cp Vendor/MemoryAtlas/scripts/fixtures/claude-mem-13.29.0.sql "$ATLAS_CHECK_APP/
 cat > "$ATLAS_CHECK_APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0"><dict>
-<key>CFBundleIdentifier</key><string>io.github.aktoriukas.atlas-bar.check</string>
+<key>CFBundleIdentifier</key><string>io.github.aktoriukas.vorssaint-memory.check</string>
 <key>CFBundleExecutable</key><string>AtlasCheck</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>LSUIElement</key><true/>

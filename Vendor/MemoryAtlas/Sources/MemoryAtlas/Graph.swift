@@ -25,7 +25,7 @@ struct KnowledgeView:View {
                             let key=string(node["id"]);guard let point=positions[key] else{continue};let center=point.applying(transform);let type=string(node["type"]);let radius=(type=="memory" || type=="summary" ? CGFloat(4):CGFloat(min(18,8+number(node["count"])/15)))*sqrt(zoom);let color=nodeColor(type)
                             if selected==key{context.fill(Path(ellipseIn:CGRect(x:center.x-radius-5,y:center.y-radius-5,width:(radius+5)*2,height:(radius+5)*2)),with:.color(color.opacity(0.25)))}
                             context.fill(Path(ellipseIn:CGRect(x:center.x-radius,y:center.y-radius,width:radius*2,height:radius*2)),with:.color(color.opacity(selected.isEmpty || selected==key || connected(key) ? 0.95:0.25)))
-                            if type != "memory" && type != "summary" || selected==key {let label=String(string(node["label"]).prefix(36));context.draw(Text(label).font(.system(size:selected==key ? 12:10,weight:selected==key ? .semibold:.regular)).foregroundColor(.white.opacity(selected.isEmpty || selected==key ? 0.8:0.5)),at:CGPoint(x:center.x,y:center.y+radius+13))}
+                            if type != "memory" && type != "summary" || selected==key {let label=String(string(node["label"]).prefix(36));context.draw(Text(label).font(.system(size:selected==key ? 12:10,weight:selected==key ? .semibold:.regular)).foregroundColor(.primary.opacity(selected.isEmpty || selected==key ? 0.8:0.5)),at:CGPoint(x:center.x,y:center.y+radius+13))}
                         }
                     }.contentShape(Rectangle())
                     .gesture(DragGesture(minimumDistance:4).onChanged{drag=$0.translation}.onEnded{pan.width += $0.translation.width;pan.height += $0.translation.height;drag = .zero})

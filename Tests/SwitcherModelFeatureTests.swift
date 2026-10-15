@@ -1986,11 +1986,10 @@ enum SwitcherModelFeatureTests {
         // decision above is made consciously, never by omission.
         let releasePlist = NSDictionary(contentsOfFile: "Resources/Info.plist")
         let plistVersion = (releasePlist?["CFBundleShortVersionString"] as? String) ?? ""
-        suite.expect(plistVersion == "0.1.0"
-                && !SupportUpdateIntroInfo.shouldShow(appVersion: plistVersion, lastSeenVersion: nil),
-               "the fork version never displays upstream release support prompts")
+        suite.expect(plistVersion == "3.4.1",
+               "bumping the app version requires re-deciding the support prompt pin above")
         let plistBuild = (releasePlist?["CFBundleVersion"] as? String) ?? ""
-        suite.expect(plistBuild == "1",
+        suite.expect(plistBuild == "101",
                "every app version needs its own incremented bundle build")
         suite.expect(SupportUpdateIntroInfo.releaseVersion == "3.4.1",
                "the support prompt is prepared for the 3.4.1 stable release")
@@ -4221,9 +4220,7 @@ enum SwitcherModelFeatureTests {
                "a click after hiding lets the Dock bring the app back")
         suite.expect(DockClickSupport.repeatDecision(lastAction: .hide, elapsed: 0.1) == .swallow,
                "an accidental double-click never hides and immediately reopens the app")
-        suite.expect(DockClickSupport.isOwnBundleIdentifier("io.github.aktoriukas.atlas-bar")
-                && DockClickSupport.isOwnBundleIdentifier("io.github.aktoriukas.atlas-bar.dev")
-                && DockClickSupport.isOwnBundleIdentifier("com.vorssaint.utils")
+        suite.expect(DockClickSupport.isOwnBundleIdentifier("com.vorssaint.utils")
                 && DockClickSupport.isOwnBundleIdentifier("com.vorssaint.utils.dev")
                 && !DockClickSupport.isOwnBundleIdentifier("com.example.editor")
                 && !DockClickSupport.isOwnBundleIdentifier(nil),

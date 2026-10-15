@@ -425,7 +425,8 @@ extension AppFeature {
     var hardwareUnsupportedReason: String? {
         switch self {
         case .fanControl:
-            return "Fan control requires a signed Atlas Bar helper and is unavailable in this local build."
+            return FanControlHardware.hasControllableFan
+                ? nil : FeatureStrings.fanControl(L10n.shared.language).noFans
         default:
             return nil
         }

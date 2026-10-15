@@ -3,6 +3,25 @@
 import Foundation
 
 enum MemoryAtlasStrings {
+    static func title(_ language: AppLanguage) -> String {
+        switch language {
+        case .enUS: return "Memories"
+        case .ptBR: return "Memórias"
+        case .tr: return "Anılar"
+        case .ru: return "Воспоминания"
+        case .es: return "Memorias"
+        case .sk: return "Spomienky"
+        case .de: return "Erinnerungen"
+        case .fr: return "Mémoires"
+        case .it: return "Memorie"
+        case .ja: return "メモリー"
+        case .ko: return "메모리"
+        case .zhHans: return "记忆"
+        case .zhTW, .zhHK: return "記憶"
+        case .uk: return "Спогади"
+        }
+    }
+
     static func description(_ language: AppLanguage) -> String {
         switch language {
         case .enUS: return "Browse, connect and manage your local Claude and Codex memories."

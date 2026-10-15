@@ -4,17 +4,10 @@ import MemoryAtlasKit
 
 @MainActor final class MemoryAtlasIntegration {
     static let shared = MemoryAtlasIntegration()
-    private var dashboard: MemoryAtlasWindowController?
-
-    func open() {
-        guard AppFeature.memoryAtlas.isAvailable else { return }
-        if dashboard == nil { dashboard = MemoryAtlasWindowController() }
-        dashboard?.open()
-    }
 
     func syncWithPreferences() {
-        if !AppFeature.memoryAtlas.isAvailable { dashboard?.close() }
+        if !AppFeature.memoryAtlas.isAvailable { MemoryAtlasSession.shared.stopMonitoring() }
     }
 
-    var canTerminate: Bool { dashboard?.canTerminate ?? true }
+    var canTerminate: Bool { MemoryAtlasSession.shared.canTerminate }
 }

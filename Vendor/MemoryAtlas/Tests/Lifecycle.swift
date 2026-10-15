@@ -7,34 +7,32 @@ import AppKit
         precondition(Bridge.demo, "Run only with --demo")
         _ = NSApplication.shared
         NSApp.setActivationPolicy(.accessory)
-        let controller = MemoryAtlasWindowController()
-        assert(!controller.model.isMonitoring)
-        let window = controller.window
-        controller.open()
-        controller.open()
-        assert(controller.window === window, "Reopening must reuse the dashboard")
-        assert(controller.model.isMonitoring)
-        for _ in 0..<100 where controller.model.lastUpdated == nil && controller.model.error == nil {
+        let session = MemoryAtlasSession.shared
+        assert(!session.model.isMonitoring)
+        session.setVisible(true)
+        session.setVisible(true)
+        assert(session.model.isMonitoring)
+        for _ in 0..<100 where session.model.lastUpdated == nil && session.model.error == nil {
             try await Task.sleep(nanoseconds: 100_000_000)
         }
-        assert(controller.model.error == nil, controller.model.error ?? "")
-        assert(number(controller.model.counts["observation"]) > 0, "Bundled bridge must load demo data")
-        await controller.model.loadMemories()
-        assert(!controller.model.records.isEmpty)
-        await controller.model.loadGraph()
-        assert(!objects(controller.model.graph["nodes"]).isEmpty)
-        controller.model.busy = true
-        controller.model.export("json", filtered: false)
-        let overlapping = await controller.model.operation(["op": "save_settings", "changes": [:]])
-        assert(!overlapping && controller.model.busy, "Another action must not clear an active write")
-        controller.model.busy = false
-        controller.close()
-        assert(!controller.model.isMonitoring, "Closing must stop background polling")
-        assert(controller.canTerminate)
-        controller.open()
-        assert(controller.window === window && controller.model.isMonitoring)
-        controller.close()
-        assert(!controller.model.isMonitoring)
-        print("PASS: embedded resource loading, memory browser, graph, single window, stop/restart monitoring, idle termination")
+        assert(session.model.error == nil, session.model.error ?? "")
+        assert(number(session.model.counts["observation"]) > 0, "Bundled bridge must load demo data")
+        await session.model.loadMemories()
+        assert(!session.model.records.isEmpty)
+        await session.model.loadGraph()
+        assert(!objects(session.model.graph["nodes"]).isEmpty)
+        session.model.busy = true
+        session.model.export("json", filtered: false)
+        let overlapping = await session.model.operation(["op": "save_settings", "changes": [:]])
+        assert(!overlapping && session.model.busy, "Another action must not clear an active write")
+        session.model.busy = false
+        session.setVisible(false)
+        assert(!session.model.isMonitoring, "Closing must stop background polling")
+        assert(session.canTerminate)
+        session.setVisible(true)
+        assert(session.model.isMonitoring)
+        session.setVisible(false)
+        assert(!session.model.isMonitoring)
+        print("PASS: embedded resource loading, memory browser, graph, embedded session, stop/restart monitoring, idle termination")
     }
 }

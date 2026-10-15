@@ -378,6 +378,7 @@ final class FeatureRuntime: ObservableObject {
         .notchMascot: {
             if AppFeature.notch.isAvailable { NotchService.shared.syncWithPreferences() }
         },
+        .memoryAtlas: { Task { @MainActor in MemoryAtlasIntegration.shared.syncWithPreferences() } },
         .scratchpad: { ScratchpadService.shared.syncWithPreferences() },
         .commandBar: { CommandBarService.shared.syncWithPreferences() },
         .cleaner: {
@@ -424,8 +425,7 @@ extension AppFeature {
     var hardwareUnsupportedReason: String? {
         switch self {
         case .fanControl:
-            return FanControlHardware.hasControllableFan
-                ? nil : FeatureStrings.fanControl(L10n.shared.language).noFans
+            return "Fan control requires a signed Atlas Bar helper and is unavailable in this local build."
         default:
             return nil
         }

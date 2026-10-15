@@ -271,6 +271,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate, NSW
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard MemoryAtlasIntegration.shared.canTerminate else { return .terminateCancel }
         if inputSourceRestorationPending { return .terminateLater }
         guard CommandBarService.shared.hasBorrowedInputSource else { return .terminateNow }
         inputSourceRestorationPending = true

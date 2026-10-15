@@ -281,6 +281,7 @@ extension AppFeature {
     /// Settings destination before the project compiles.
     var settingsDestination: FeatureSettingsDestination {
         switch self {
+        case .memoryAtlas: return FeatureSettingsDestination(.features)
         case .switcher: return FeatureSettingsDestination(.switcher, sectionAnchor: .switcher)
         case .dockPreview: return FeatureSettingsDestination(.dock, sectionAnchor: .dock)
         case .dockClick: return FeatureSettingsDestination(.dock, sectionAnchor: .dockClick)

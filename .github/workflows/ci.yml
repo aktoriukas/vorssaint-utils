@@ -33,7 +33,7 @@ jobs:
         run: ./build.sh
 
       - name: Selftest
-        run: ./build/Vorssaint --selftest
+        run: ./build/AtlasBar --selftest
 
       - name: Unit tests
         run: ./build.sh --test
@@ -51,7 +51,10 @@ jobs:
         run: ./build.sh
 
       - name: Selftest
-        run: ./build/Vorssaint --selftest
+        run: ./build/AtlasBar --selftest
+
+      - name: Embedded Memory Atlas lifecycle
+        run: ./Tools/check-memory-atlas.sh
 
       - name: Package DMG
         run: ./Tools/make-dmg.sh

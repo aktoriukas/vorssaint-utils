@@ -27,7 +27,7 @@ final class UpdateService: ObservableObject {
     /// preview. Set alongside `.available`; cleared otherwise.
     @Published private(set) var availableNotes: String?
 
-    private let repository = "vorssaint/vorssaint-utils"
+    private let repository = "aktoriukas/vorssaint-utils"
     private var downloadURL: URL?
     /// Size the release advertises for the asset, used to bound the download.
     private var downloadExpectedBytes: Int64?
@@ -61,6 +61,7 @@ final class UpdateService: ObservableObject {
 
     /// Called at launch: checks shortly after start and then daily, if enabled.
     func startAutomaticChecks() {
+        guard AppInfo.supportsSelfUpdates else { return }
         consumeInstallResult()
         if AppInfo.isBeta && UserDefaults.standard.object(forKey: DefaultsKey.includeBetaUpdates) == nil {
             UserDefaults.standard.set(true, forKey: DefaultsKey.includeBetaUpdates)
@@ -84,6 +85,7 @@ final class UpdateService: ObservableObject {
     }
 
     private func configureAutomaticChecks() {
+        guard AppInfo.supportsSelfUpdates else { return }
         refreshTimer?.invalidate()
         refreshTimer = nil
         guard autoCheckEnabled else { return }
@@ -100,6 +102,10 @@ final class UpdateService: ObservableObject {
     // MARK: - Check
 
     func check(manual: Bool) {
+        guard AppInfo.supportsSelfUpdates else {
+            if manual { state = .failed("Atlas Bar updates are installed from your fork.") }
+            return
+        }
         if AppInfo.isDeveloperBuild {
             // No real update target; reflect the simulation default so the
             // notification UI can be exercised locally.
@@ -193,6 +199,7 @@ final class UpdateService: ObservableObject {
     /// or the panel opens, so a new release surfaces promptly without hammering the
     /// API. The hourly timer is the floor; this makes it feel immediate.
     func checkIfStale(maxAge: TimeInterval = 15 * 60) {
+        guard AppInfo.supportsSelfUpdates else { return }
         if AppInfo.isDeveloperBuild { return }
         guard autoCheckEnabled else { return }
         switch state {
@@ -206,6 +213,7 @@ final class UpdateService: ObservableObject {
     // MARK: - Download & install
 
     func downloadAndInstall() {
+        guard AppInfo.supportsSelfUpdates else { return }
         if AppInfo.isDeveloperBuild { return }  // never replace the local dev build over itself
         guard let downloadURL else { return }
         // Pre-flight BEFORE spending the download: a translocated app or one

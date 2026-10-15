@@ -8,6 +8,7 @@ let package = Package(
     name: "Vorssaint",
     platforms: [.macOS(.v14)],
     targets: [
+        .target(name: "MemoryAtlasKit", path: "Vendor/MemoryAtlas/Sources/MemoryAtlas"),
         .systemLibrary(
             name: "HIDEventSystem",
             path: "Sources/HIDEventSystem"
@@ -18,7 +19,7 @@ let package = Package(
         ),
         .executableTarget(
             name: "Vorssaint",
-            dependencies: ["VMStatisticsCompat", "HIDEventSystem"],
+            dependencies: ["VMStatisticsCompat", "HIDEventSystem", "MemoryAtlasKit"],
             path: "Sources/Vorssaint"
         )
     ]

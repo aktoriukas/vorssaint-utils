@@ -2502,7 +2502,7 @@ enum CommandBarInputSourceContract {
 /// run-loop modes, with inert replies and input sources. No app quits or layout changes.
 enum CommandBarTerminationContract {
     final class Application {
-        enum TerminateReply { case terminateNow, terminateLater }
+        enum TerminateReply { case terminateNow, terminateLater, terminateCancel }
         var replies: [Bool] = []
         var sourceAtReply: [String] = []
         func reply(toApplicationShouldTerminate accepted: Bool) {
@@ -2513,9 +2513,14 @@ enum CommandBarTerminationContract {
     enum Bar {
         static var shared = CommandBarInputSourceContract.Service()
     }
+    final class Atlas {
+        static let shared = Atlas()
+        var canTerminate = true
+    }
     class Fixture {
         typealias NSApplication = Application
         typealias CommandBarService = Bar
+        typealias MemoryAtlasIntegration = Atlas
         var inputSourceRestorationPending = false
     }
     static func run(_ suite: TestSuite) {
@@ -2540,6 +2545,11 @@ enum CommandBarTerminationContract {
             CommandBarInputSourceContract.Sources.acceptsSelection = true
         }
         let (idle, idleApp) = reset(borrowed: false)
+        Atlas.shared.canTerminate = false
+        suite.expect(idle.applicationShouldTerminate(idleApp) == .terminateCancel
+                     && idleApp.replies.isEmpty,
+                     "an in-flight memory operation prevents the host from quitting")
+        Atlas.shared.canTerminate = true
         suite.expect(idle.applicationShouldTerminate(idleApp) == .terminateNow
                      && idleApp.replies.isEmpty,
                      "termination without a borrowed layout does not create an asynchronous reply")

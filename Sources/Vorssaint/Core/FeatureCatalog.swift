@@ -26,6 +26,7 @@ enum AppFeature: String, CaseIterable {
     // Energy and display
     case keepAwake, brightness, extraBrightness, bluetoothSleep
     // Tools
+    case memoryAtlas
     case quickLauncher, quickToggles, colorPicker, screenOCR, cleaningMode, mediaTools,
          cleaner, uninstaller, homebrew, appUpdates, screenshot, cameraPreview, radialMenu, scratchpad,
          commandBar, screenRecorder, wallpaper, killProcess, portManager
@@ -73,6 +74,7 @@ extension AppFeature {
     func monitorsPermissionChanges(edgeSnapDisabledZones: String? = nil,
                                    boolFor: (String) -> Bool) -> Bool {
         switch self {
+        case .memoryAtlas: return false
         case .windowLayout:
             return boolFor(DefaultsKey.windowLayoutShortcutsEnabled)
                 || boolFor(DefaultsKey.windowGestureEnabled)
@@ -101,6 +103,7 @@ extension AppFeature {
 
     var group: FeatureGroup {
         switch self {
+        case .memoryAtlas: return .tools
         case .switcher, .dockPreview, .dockClick, .windowMaximizer, .windowLayout, .autoQuit, .spacesOrder:
             return .windowsDock
         case .scrollInverter, .scrollHorizontal, .focusFollowsMouse, .smoothScroll, .linearScroll, .mouseAcceleration, .mouseNavigation, .mouseButtonShortcuts, .middleClick,
@@ -129,6 +132,7 @@ extension AppFeature {
 
     var symbolName: String {
         switch self {
+        case .memoryAtlas: return "point.3.connected.trianglepath.dotted"
         case .switcher: return "rectangle.on.rectangle"
         case .dockPreview: return "dock.rectangle"
         case .dockClick: return "dock.arrow.down.rectangle"
@@ -232,6 +236,7 @@ extension AppFeature {
     /// the permissions portal.
     var enabledKeys: [String] {
         switch self {
+        case .memoryAtlas: return []
         case .switcher: return [DefaultsKey.switcherEnabled]
         case .dockPreview: return [DefaultsKey.dockPreviewEnabled]
         case .dockClick: return [DefaultsKey.dockClickMinimize,
@@ -329,6 +334,7 @@ extension AppFeature {
     /// monitor only notifies when an alert is on, and so on).
     var permissions: [AppPermission] {
         switch self {
+        case .memoryAtlas: return []
         case .notchGestures: return []
         case .notchTimer, .notchAccessories: return []
         case .notchLyrics, .notchQueue: return []
@@ -468,6 +474,7 @@ extension AppFeature {
     /// that copies its parent's availability instead.
     var installedByDefault: Bool {
         switch self {
+        case .memoryAtlas: return false
         case .switcher, .dockPreview, .dockClick, .windowMaximizer, .windowLayout, .autoQuit,
              .scrollInverter, .smoothScroll, .mouseAcceleration, .mouseNavigation, .mouseButtonShortcuts,
              .middleClick, .mouseClickDebounce, .keyboardDebounce, .textSnippets, .superKey,

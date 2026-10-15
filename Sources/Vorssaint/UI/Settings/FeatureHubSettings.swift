@@ -526,7 +526,7 @@ private struct FeatureHubRow: View {
 
     private var installed: Bool { feature.isAvailable }
 
-    private var opensSettings: Bool { installed && feature.hasNavigableSettingsDestination }
+    private var opensSettings: Bool { installed && (feature == .memoryAtlas || feature.hasNavigableSettingsDestination) }
 
     /// Extensions still installed under this row's feature; only the Dynamic
     /// Island has any. They do nothing without it, so its uninstall asks
@@ -572,6 +572,7 @@ private struct FeatureHubRow: View {
         HStack(spacing: 12) {
             if opensSettings {
                 Button {
+                    if feature == .memoryAtlas { MemoryAtlasIntegration.shared.open(); return }
                     SettingsRouter.shared.request(feature.settingsDestination,
                                                   sidebarFeature: feature)
                 } label: {
@@ -1069,6 +1070,7 @@ extension AppFeature {
         case .cleaner: return s.cleanerName
         case .uninstaller: return s.uninstallerName
         case .killProcess: return FeatureStrings.killProcess(L10n.shared.language).pageTitle
+        case .memoryAtlas: return "Memory Atlas"
         case .portManager: return FeatureStrings.portManager(L10n.shared.language).title
         case .homebrew: return s.homebrewName
         case .appUpdates: return FeatureStrings.appUpdates(L10n.shared.language).pageTitle
@@ -1159,6 +1161,7 @@ extension AppFeature {
                 + FeatureStrings.whatsAppDownloads(L10n.shared.language).hubDescription
         case .uninstaller: return hub.descUninstaller
         case .killProcess: return FeatureStrings.killProcess(L10n.shared.language).hubDescription
+        case .memoryAtlas: return MemoryAtlasStrings.description(L10n.shared.language)
         case .portManager: return FeatureStrings.portManager(L10n.shared.language).hubDescription
         case .homebrew: return hub.descHomebrew
         case .appUpdates: return FeatureStrings.appUpdates(L10n.shared.language).hubDescription
